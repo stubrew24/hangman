@@ -1,0 +1,26 @@
+{
+  "name": "hangman",
+  "version": "1.0.0",
+  "description": "Multiplayer hangman game",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stubrew24/hangman.git"
+  },
+  "keywords": [
+    "hangman",
+    "game",
+    "nodejs",
+    "socketio",
+    "javascript"
+  ],
+  "author": "Stuart Sewell - stuartsewell.dev",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/stubrew24/hangman/issues"
+  },
+  "homepage": "https://github.com/stubrew24/hangman#readme"
+}
