@@ -14,7 +14,7 @@ const sockets = io => {
       if (room && room.length === 1) {
         socket.join(data.room);
         socket.broadcast.to(data.room).emit("player1", { name: data.name });
-        socket.emit("player2", { name: data.name, room: data.room });
+        socket.emit("joinedRoom", { name: data.name, room: data.room });
         console.log(room);
       } else {
         socket.emit("err", { message: "Sorry, game is full." });
