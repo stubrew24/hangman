@@ -48,12 +48,21 @@
             /><br />
             <button type="submit">Join Game</button>
           </form>
+
+          <div id="game-display">
+            <form id="choose-word">
+              <input type="text" placeholder="Choose a Word" name="word" />
+              <button>GO</button>
+            </form>
+            <div id="letters-display"></div>
+            <div id="keyboard-display"></div>
+          </div>
         </div>
-        <div id="game-display"></div>
       </div>
     </div>
     <script src="/socket.io/socket.io.js"></script>
     <!-- <script src="./scripts/index.js"></script> -->
+    <script src="./scripts/alphabet.js"></script>
     <script src="./scripts/game.js"></script>
   </body>
 </html>

@@ -1,7 +1,8 @@
 #game-display {
-  display: none;
+  /* display: none; */
 }
 
+#new-game,
 #join-game {
   display: none;
 }
