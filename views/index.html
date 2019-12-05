@@ -22,8 +22,35 @@
       <div class="row">
         <div class="one-half column" style="margin-top: 25%">
           <h4>Hello World</h4>
+          <form id="new-game">
+            <input
+              type="text"
+              placeholder="Name"
+              name="name"
+              value="Stu"
+            /><br />
+            <button type="submit">New Game</button>
+          </form>
+
+          <form id="join-game">
+            <input
+              type="text"
+              placeholder="Name"
+              name="name"
+              value="Bee"
+            /><br />
+            <input
+              type="text"
+              placeholder="Game ID"
+              name="game"
+              value="1"
+            /><br />
+            <button type="submit">Join Game</button>
+          </form>
         </div>
       </div>
     </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="./scripts/index.js"></script>
   </body>
 </html>
