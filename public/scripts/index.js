@@ -1,6 +1,7 @@
 const socket = io();
 const newGameForm = document.getElementById("new-game");
 const joinGameForm = document.getElementById("join-game");
+const gameDisplay = document.getElementById("game-display");
 
 newGameForm.addEventListener("submit", e => {
   e.preventDefault();
@@ -17,4 +18,25 @@ joinGameForm.addEventListener("submit", e => {
   socket.emit("joinGame", { name, room: `room-${game}` });
 });
 
-socket.on("newGame", console.log);
+socket.on("newGame", data => {
+  hideStartPage();
+  showGamePage(data);
+});
+
+socket.on("joinedRoom", data => {
+  hideStartPage();
+  showGamePage(data);
+});
+
+const hideStartPage = () => {
+  newGameForm.style.display = "none";
+  joinGameForm.style.display = "none";
+};
+
+const showGamePage = data => {
+  gameDisplay.style.display = "inline";
+};
+
+const roomToInt = room => {
+  return room.split("-")[1];
+};

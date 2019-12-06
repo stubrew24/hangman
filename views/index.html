@@ -16,41 +16,50 @@
 
     <link rel="stylesheet" href="./stylesheets/normalize.css" />
     <link rel="stylesheet" href="./stylesheets/skeleton.css" />
+    <link rel="stylesheet" href="./stylesheets/style.css" />
   </head>
   <body>
     <div class="container">
-      <div class="row">
-        <div class="one-half column" style="margin-top: 25%">
-          <h4>Hello World</h4>
-          <form id="new-game">
-            <input
-              type="text"
-              placeholder="Name"
-              name="name"
-              value="Stu"
-            /><br />
-            <button type="submit">New Game</button>
+      <div class="row" style="margin-top: 15%">
+        <!-- <div class="one-half column" style="margin-top: 25%"> -->
+        <h4>Hello World</h4>
+        <form id="new-game">
+          <input type="text" placeholder="Name" name="name" value="Stu" /><br />
+          <button type="submit">New Game</button>
+        </form>
+
+        <form id="join-game">
+          <input type="text" placeholder="Name" name="name" value="Bee" /><br />
+          <input
+            type="text"
+            placeholder="Game ID"
+            name="game"
+            value="1"
+          /><br />
+          <button type="submit">Join Game</button>
+        </form>
+
+        <div id="game-display">
+          <div id="game-status"></div>
+          <form id="choose-word">
+            <input type="text" placeholder="Word or Phrase" name="word" />
+            <button>GO</button>
           </form>
 
-          <form id="join-game">
-            <input
-              type="text"
-              placeholder="Name"
-              name="name"
-              value="Bee"
-            /><br />
-            <input
-              type="text"
-              placeholder="Game ID"
-              name="game"
-              value="1"
-            /><br />
-            <button type="submit">Join Game</button>
-          </form>
+          <div id="game-display"></div>
+          <pre id="image"></pre>
+          <div id="misses-display"></div>
+          <div id="letters-display"></div>
+          <div id="keyboard-display"></div>
+          <button id="reset-game">New Game</button>
         </div>
       </div>
+      <!-- </div> -->
     </div>
     <script src="/socket.io/socket.io.js"></script>
     <script src="./scripts/index.js"></script>
+    <script src="./scripts/stages.js"></script>
+    <script src="./scripts/alphabet.js"></script>
+    <script src="./scripts/game.js"></script>
   </body>
 </html>
