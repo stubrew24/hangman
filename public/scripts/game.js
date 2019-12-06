@@ -1,4 +1,3 @@
-const gameDisplay = document.getElementById("game-display");
 const chooseWordForm = document.getElementById("choose-word");
 const lettersDisplay = document.getElementById("letters-display");
 const keyboardDisplay = document.getElementById("keyboard-display");

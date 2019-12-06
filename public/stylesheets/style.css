@@ -1,12 +1,4 @@
-#game-display {
-  /* display: none; */
-}
-
-#new-game,
-#join-game {
-  display: none;
-}
-
+#game-display,
 #reset-game {
   display: none;
 }
