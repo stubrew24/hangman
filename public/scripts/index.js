@@ -35,10 +35,6 @@ const hideStartPage = () => {
 
 const showGamePage = data => {
   gameDisplay.style.display = "inline";
-  gameDisplay.innerHTML = `
-    <h3>Welcome ${data.name}</h3>
-    <p>Game ID: ${roomToInt(data.room)}</p>
-  `;
 };
 
 const roomToInt = room => {
