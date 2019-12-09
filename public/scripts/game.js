@@ -73,8 +73,8 @@ const endGame = () => {
 };
 
 const displayMisses = () => {
-  missesDisplay.innerText = "";
-  state.misses.map(miss => (missesDisplay.innerText += miss));
+  missesDisplay.innerHTML = "";
+  state.misses.map(miss => (missesDisplay.innerHTML += `<code>${miss}</code>`));
 };
 
 const tryGameOver = () => state.misses.length >= 6;
@@ -114,6 +114,7 @@ const validateWord = word => {
 
 const p2view = () => {
   displayLettersFields();
+  image.style.display = "inline";
   image.innerText = stage[state.misses.length || 0];
   displayAvailableLetters();
 };
@@ -121,6 +122,7 @@ const p2view = () => {
 const p1view = () => {
   displayLettersFields();
   clearDisplay();
+  image.style.display = "inline";
   image.innerText = stage[state.misses.length || 0];
 };
 
@@ -236,5 +238,7 @@ socket.on("playerLost", data => {
 });
 
 socket.on("resetBoard", () => {
+  image.style.display = "none";
   resetBoard();
+  updateDisplay("Waiting for opponent to choose word/phrase.", "info");
 });

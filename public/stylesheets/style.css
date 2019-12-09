@@ -7,6 +7,7 @@
 #letters-display {
   letter-spacing: 1em;
   font-size: 2em;
+  margin: 50px 0;
 }
 
 h1 {
@@ -16,7 +17,7 @@ h1 {
 form {
   width: 330px;
   text-align: center;
-  margin: 50px auto;
+  margin: 5rem auto;
 }
 
 input[type="text"] {
@@ -51,4 +52,8 @@ input[type="text"] {
   text-align: center;
   text-transform: uppercase;
   font-size: 2rem;
+}
+
+#misses-display {
+  height: 4rem;
 }
