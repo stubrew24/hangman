@@ -2,6 +2,8 @@ const socket = io();
 const newGameForm = document.getElementById("new-game");
 const joinGameForm = document.getElementById("join-game");
 const gameDisplay = document.getElementById("game-display");
+const gameStatus = document.getElementById("game-status");
+let room;
 
 newGameForm.addEventListener("submit", e => {
   e.preventDefault();
@@ -20,11 +22,14 @@ joinGameForm.addEventListener("submit", e => {
 
 socket.on("newGame", data => {
   hideStartPage();
+  room = data.room;
+  gameStatus.innerText = `Room: ${data.room}. Waiting for opponent to join...`;
   showGamePage(data);
 });
 
 socket.on("joinedRoom", data => {
   hideStartPage();
+  room = data.room;
   showGamePage(data);
 });
 

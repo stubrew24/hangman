@@ -1,4 +1,10 @@
 #game-display,
-#reset-game {
+#reset-game,
+#choose-word {
   display: none;
+}
+
+#letters-display {
+  letter-spacing: 1em;
+  font-size: 2em;
 }
