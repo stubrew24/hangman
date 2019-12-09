@@ -22,7 +22,9 @@
     <div class="container">
       <div class="row" style="margin-top: 15%">
         <!-- <div class="one-half column" style="margin-top: 25%"> -->
-        <h4>Hello World</h4>
+        <h1>HANGMAN</h1>
+        <div id="game-status"></div>
+
         <form id="new-game">
           <input type="text" placeholder="Name" name="name" value="Stu" /><br />
           <button type="submit">New Game</button>
@@ -40,10 +42,11 @@
         </form>
 
         <div id="game-display">
-          <div id="game-status"></div>
           <form id="choose-word">
             <input type="text" placeholder="Word or Phrase" name="word" />
-            <button>GO</button>
+            <div id="start-button">
+              <button>Start Game</button>
+            </div>
           </form>
 
           <pre id="image"></pre>

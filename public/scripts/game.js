@@ -10,30 +10,10 @@ const state = {
   hits: [],
   misses: [],
   available: [...ALPHABET],
-  errors: [],
-  player: null
+  errors: []
 };
 
-chooseWordForm.addEventListener("submit", e => {
-  e.preventDefault();
-  validateWord(e.target.word.value);
-  if (state.errors.length) return displayErrors();
-  chooseWordForm.style.display = "none";
-  state.word = e.target.word.value.split("").map(x => {
-    if (x === " ") return " / ";
-    return x.toUpperCase();
-  });
-  state.hits = state.word.map(x => {
-    if (x === " / ") return " / ";
-    return null;
-  });
-  chooseWordForm.reset();
-  socket.emit("wordSubmitted", {
-    room,
-    hits: state.hits
-  });
-  p1view();
-});
+// GAMEPLAY FUNCTIONS
 
 const displayLettersFields = () => {
   const displayWord = state.hits
@@ -87,8 +67,7 @@ const arrayCompare = (a, b) => {
   return true;
 };
 
-const endGame = message => {
-  gameStatus.innerHTML = `<h1>${message}</h1>`;
+const endGame = () => {
   keyboardDisplay.style.display = "none";
   resetButton.style.display = "inline";
 };
@@ -100,16 +79,9 @@ const displayMisses = () => {
 
 const tryGameOver = () => state.misses.length >= 6;
 
-resetButton.addEventListener("click", e => {
-  socket.emit("resetGame", { room });
-  resetBoard();
-  chooseWordForm.style.display = "inline";
-  resetButton.style.display = "none";
-});
-
 const resetBoard = () => {
   image.innerText = stage[0];
-  gameStatus.innerText = "";
+  clearDisplay();
   state.word = [];
   state.hits = [];
   state.misses = [];
@@ -118,29 +90,11 @@ const resetBoard = () => {
   displayLettersFields();
 };
 
-document.addEventListener("click", e => {
-  if (e.target.className !== "letterButton") return;
-  const letter = e.target.dataset.letter;
-  letterPress(letter);
-});
-
-document.addEventListener("keypress", e => {
-  if (!state.hits.length) return;
-  if (state.word.length) return;
-  letterPress(e.key.toUpperCase());
-});
-
 const letterPress = letter => {
   if (!state.available.includes(letter)) return;
   state.available = state.available.filter(x => x !== letter);
   displayLettersFields();
   socket.emit("letterGuess", { room, letter });
-  // tryGuess(letter);
-  // if (checkWin()) return endGame();
-  // displayAvailableLetters();
-  // displayMisses();
-  // image.innerText = stage[state.misses.length || 0];
-  // tryGameOver();
 };
 
 const displayErrors = () => {
@@ -166,134 +120,121 @@ const p2view = () => {
 
 const p1view = () => {
   displayLettersFields();
+  clearDisplay();
   image.innerText = stage[state.misses.length || 0];
 };
 
-socket.on("playerJoined", e => {
-  // state.player = 1;
-  gameStatus.innerText = "";
-  chooseWordForm.style.display = "inline";
+const moveTaken = data => {
+  const { hits, misses } = data;
+  state.hits = hits;
+  state.misses = misses;
+  displayAvailableLetters();
+  displayMisses();
+  displayLettersFields();
+  image.innerText = stage[state.misses.length || 0];
+};
+
+const gameState = () => {
+  return {
+    room,
+    misses: state.misses,
+    hits: state.hits
+  };
+};
+
+// EVENT LISTENERS
+
+chooseWordForm.addEventListener("submit", e => {
+  e.preventDefault();
+  validateWord(e.target.word.value);
+  if (state.errors.length) return displayErrors();
+  chooseWordForm.style.display = "none";
+  state.word = e.target.word.value.split("").map(x => {
+    if (x === " ") return " / ";
+    return x.toUpperCase();
+  });
+  state.hits = state.word.map(x => {
+    if (x === " / ") return " / ";
+    return null;
+  });
+  chooseWordForm.reset();
+  socket.emit("wordSubmitted", {
+    room,
+    hits: state.hits
+  });
+  p1view();
 });
 
-socket.on("joinedRoom", e => {
-  // state.player = 2;
-  gameStatus.innerText = "";
-  // chooseWordForm.style.display = "inline";
+document.addEventListener("click", e => {
+  if (e.target.className !== "letterButton") return;
+  const letter = e.target.dataset.letter;
+  letterPress(letter);
+});
+
+document.addEventListener("keypress", e => {
+  if (!state.hits.length) return;
+  if (state.word.length) return;
+  if (state.misses.length >= 6) return;
+  letterPress(e.key.toUpperCase());
+});
+
+resetButton.addEventListener("click", e => {
+  socket.emit("resetGame", { room });
+  resetBoard();
+  image.style.display = "none";
+  chooseWordForm.style.display = "inline";
+  resetButton.style.display = "none";
+});
+
+// SOCKET ACTIONS
+
+socket.on("playerJoined", () => {
+  updateDisplay("Opponent has joined.", "success");
+  chooseWordForm.style.display = "block";
+});
+
+socket.on("joinedRoom", () => {
+  updateDisplay("Waiting for opponent to choose word/phrase.", "info");
 });
 
 socket.on("newWord", data => {
+  clearDisplay();
   state.hits = data.hits;
   p2view();
 });
 
 socket.on("guessedLetter", data => {
-  const { letter } = data;
-  tryGuess(letter);
+  tryGuess(data.letter);
   displayMisses();
   displayLettersFields();
+
   if (checkWin()) {
-    gameStatus.innerHTML = `<h1>You Lost!</h1>`;
-    return socket.emit("gameEndWin", {
-      room,
-      misses: state.misses,
-      hits: state.hits
-    });
+    updateDisplay("You lost.", "error game-end");
+    return socket.emit("gameEndWin", gameState());
   }
   if (tryGameOver()) {
-    gameStatus.innerHTML = `<h1>You Won!</h1>`;
-    return socket.emit("gameEndLose", {
-      room,
-      misses: state.misses,
-      hits: state.hits
-    });
+    updateDisplay("You Won!", "success game-end");
+    return socket.emit("gameEndLose", gameState());
   }
   socket.emit("tryLetter", { room, misses: state.misses, hits: state.hits });
 });
 
 socket.on("letterTried", data => {
-  const { hits, misses } = data;
-  state.hits = hits;
-  state.misses = misses;
-  displayAvailableLetters();
-  displayMisses();
-  displayLettersFields();
-  image.innerText = stage[state.misses.length || 0];
+  moveTaken(data);
 });
 
 socket.on("playerWon", data => {
-  const { hits, misses } = data;
-  state.hits = hits;
-  state.misses = misses;
-  displayAvailableLetters();
-  displayMisses();
-  displayLettersFields();
-  image.innerText = stage[state.misses.length || 0];
-  endGame("You won!");
+  moveTaken(data);
+  updateDisplay("You Won!", "success game-end");
+  endGame();
 });
 
 socket.on("playerLost", data => {
-  const { hits, misses } = data;
-  state.hits = hits;
-  state.misses = misses;
-  displayAvailableLetters();
-  displayMisses();
-  displayLettersFields();
-  image.innerText = stage[state.misses.length || 0];
-  endGame("You lose! :(");
+  moveTaken(data);
+  updateDisplay("You lost.", "error game-end");
+  endGame();
 });
 
-socket.on("resetBoard", data => {
+socket.on("resetBoard", () => {
   resetBoard();
 });
-
-/////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////
-// Sockets //
-
-const P1_Starts_Room = {
-  emit: "createGame",
-  receives: "newGame",
-  broadcast: null
-};
-
-const P2_Joins_Room = {
-  emit: "joinGame",
-  recieves: "joinedRoom",
-  broadcast: "playerJoined"
-};
-
-const P1_Chooses_Word = {
-  emit: "wordSubmitted",
-  recieves: null,
-  broadcast: "newWord"
-};
-
-const P2_Makes_a_Guess = {
-  emit: "letterGuess",
-  recieves: null,
-  broadcast: "guessedLetter"
-};
-
-const P1_Recieves_guessedLetter_broadcast = {
-  //////////////////////////
-  emit: "tryLetter",
-  recieves: null,
-  broadcast: "letterTried",
-  //////////////////////////
-  emit: "gameEndLose",
-  receives: null,
-  broadcast: "playerLost",
-  //////////////////////////
-  emit: "gameEndWin",
-  receives: null,
-  broadcast: "playerWon"
-};

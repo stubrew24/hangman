@@ -5,6 +5,15 @@ const gameDisplay = document.getElementById("game-display");
 const gameStatus = document.getElementById("game-status");
 let room;
 
+const updateDisplay = (message, style) => {
+  gameStatus.className = style;
+  gameStatus.innerHTML = message;
+};
+
+const clearDisplay = () => {
+  gameStatus.innerText = "";
+};
+
 newGameForm.addEventListener("submit", e => {
   e.preventDefault();
   const name = e.target.name.value;
@@ -23,7 +32,12 @@ joinGameForm.addEventListener("submit", e => {
 socket.on("newGame", data => {
   hideStartPage();
   room = data.room;
-  gameStatus.innerText = `Room: ${data.room}. Waiting for opponent to join...`;
+  updateDisplay(
+    `You are hosting room: ${
+      data.room.split("-")[1]
+    }.<br /> Waiting for opponent to join...`,
+    "info"
+  );
   showGamePage(data);
 });
 
