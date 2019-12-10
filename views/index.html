@@ -17,6 +17,15 @@
     <link rel="stylesheet" href="./stylesheets/normalize.css" />
     <link rel="stylesheet" href="./stylesheets/skeleton.css" />
     <link rel="stylesheet" href="./stylesheets/style.css" />
+    <link rel="manifest" href="./manifest.json" />
+
+    <link rel="icon" type="image/png" href="./images/icon.png" />
+
+    <link rel="icon" sizes="192x192" href="./images/icon.png" />
+
+    <link rel="apple-touch-icon" href="./images/icon.png" />
+    <meta name="msapplication-square310x310logo" content="./images/icon.png" />
+    <meta name="theme-color" content="#ffffff" />
   </head>
   <body>
     <div class="container">
@@ -58,5 +67,10 @@
     <script src="./scripts/stages.js"></script>
     <script src="./scripts/alphabet.js"></script>
     <script src="./scripts/game.js"></script>
+    <script>
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("./serviceworker.js");
+      }
+    </script>
   </body>
 </html>

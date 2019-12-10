@@ -4,6 +4,9 @@ const http = require("http").createServer(app);
 const io = require("socket.io")(http);
 const port = process.env.PORT || 3000;
 const { sockets } = require("./sockets");
+var enforce = require("express-sslify");
+
+app.use(enforce.HTTPS({ trustProtoHeader: true }));
 
 app.use(express.static("public"));
 
